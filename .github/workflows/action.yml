@@ -2,7 +2,7 @@ name: Deploy to Azure Spring Cloud with Key Vault
 on: [push]
 
 env:
-  AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }} # customize this
+  AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }} # customize this1
   SPRING_CLOUD_SERVICE: asa-demo # customize this
   KEYVAULT: asa-hat-kv # customize this
   # ==== APPS ====:
