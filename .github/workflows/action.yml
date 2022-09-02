@@ -183,7 +183,9 @@ jobs:
         mvn clean package -DskipTests -Denv=cloud
 
     - name: Build api-gateway container image
-      run: docker build ${{ env.API_GATEWAY_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/api-gateway:v1.${{ github.run_number }}"
+      run: docker build ${{ env.API_GATEWAY_PATH }}/. --file docker/Dockerfile \
+           --tag "${{ env.AZURE_ACR }}.azurecr.io/api-gateway:v1.${{ github.run_number }}" \
+           --build-arg ARTIFACT_NAME=${{ github.workspace }}/${{ env.API_GATEWAY_JAR }}
 
     - name: Login to the Azure Container Registry  
       uses: azure/docker-login@v1
