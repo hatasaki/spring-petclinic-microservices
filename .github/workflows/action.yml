@@ -30,7 +30,6 @@ env:
   DISCOVERY_SERVER_PATH: spring-petclinic-discovery-server
 jobs:
   deploy-to-SpringApps:
-    if
     runs-on: ubuntu-latest
     steps:
     - name: Login with Key Vault SP
