@@ -1,6 +1,6 @@
 FROM openjdk:11-jre as builder
 WORKDIR application
-COPY target/. application.jar
+COPY target/*.jar application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 
 # wget is not installed on adoptopenjdk:11-jre-hotspot
