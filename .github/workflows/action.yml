@@ -3,8 +3,11 @@ on: [push]
 
 env:
   AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }} # customize this1
+  RESOURCE_GROUP: asa-rg
   SPRING_CLOUD_SERVICE: asa-demo # customize this
   KEYVAULT: asa-hat-kv # customize this
+  AZURE_ACR: acrasa
+  CONTAINERAPPS_ENVIRONMENT: aca-env
   # ==== APPS ====:
   API_GATEWAY: api-gateway
   ADMIN_SERVER: admin-server
@@ -17,9 +20,17 @@ env:
   CUSTOMERS_SERVICE_JAR: spring-petclinic-customers-service/target/spring-petclinic-customers-service-2.5.1.jar
   VETS_SERVICE_JAR: spring-petclinic-vets-service/target/spring-petclinic-vets-service-2.5.1.jar
   VISITS_SERVICE_JAR: spring-petclinic-visits-service/target/spring-petclinic-visits-service-2.5.1.jar
-
+  # ==== JAR BUILD PATHS ====:
+  API_GATEWAY_PATH: spring-petclinic-api-gateway
+  ADMIN_SERVER_PATH: spring-petclinic-admin-server
+  CUSTOMERS_SERVICE_PATH: spring-petclinic-customers-service
+  VETS_SERVICE_PATH: spring-petclinic-vets-service
+  VISITS_SERVICE_PATH: spring-petclinic-visits-service
+  CONFIG_SERVER_PATH: spring-petclinic-config-server
+  DISCOVERY_SERVER_PATH: spring-petclinic-discovery-server
 jobs:
-  build:
+  deploy-to-SpringApps:
+    if
     runs-on: ubuntu-latest
     steps:
     - name: Login with Key Vault SP
@@ -129,3 +140,89 @@ jobs:
         -MYSQL_DATABASE_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }} \
         -MYSQL_SERVER_ADMIN_LOGIN_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-LOGIN-NAME }} \
         -MYSQL_SERVER_ADMIN_PASSWORD ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}"
+        
+jobs:
+  Deploy-to-ContainerApps:
+
+    runs-on: ubuntu-latest
+    steps:
+    - name: Login with Key Vault SP
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Get service SP from Key Vault
+      uses: Azure/get-keyvault-secrets@v1
+      with:
+        keyvault: ${{ env.KEYVAULT }}
+        secrets: "AZURE-CREDENTIALS-FOR-SPRING"
+      id: keyvaultaction
+    
+    - name: Get MySQL Secrets from Key Vault
+      uses: Azure/get-keyvault-secrets@v1
+      with:
+        keyvault: ${{ env.KEYVAULT }}
+        secrets: "MYSQL-SERVER-FULL-NAME,MYSQL-DATABASE-NAME,MYSQL-SERVER-ADMIN-LOGIN-NAME,MYSQL-SERVER-ADMIN-PASSWORD"
+      id: mysqlsecrets
+      
+    - name: Login with Service SP
+      uses: azure/login@v1
+      with:
+        creds: ${{ steps.keyvaultaction.outputs.AZURE-CREDENTIALS-FOR-SPRING }}
+        
+    - name: Checkout your repo
+      uses: actions/checkout@v2
+      
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+        cache: maven
+
+    - name: maven build, clean
+      run: |
+        mvn clean package -DskipTests -Denv=cloud
+
+    - name: Build api-gateway container image
+      run: docker build ${{ env.API_GATEWAY_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/api-gateway:v1.${{ github.run_number }}"
+
+    - name: Login to the Azure Container Registry  
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.AZURE_ACR }}.azurecr.io
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    
+    - name: Push the api-gateway container image to ACR
+      run: |
+        docker push "${{ env.AZURE_ACR }}.azurecr.io/api-gateway:v1.${{ github.run_number }}"
+   
+    - name: Create or update Container App deployment for api-gateway
+      uses: Azure/cli@v1
+      with:
+        inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt
+          az containerapp show -n rating-api -g ${{ secrets.RESOURCE_GROUP }} -o table
+          
+          if [[ $? != 0 ]]; then
+            echo "Container app not found, creating a new one..."
+            
+            az containerapp create \
+              --name api-gateway \
+              --resource-group ${{ env.RESOURCE_GROUP }} \
+              --image "${{ env.AZURE_ACR }}.azurecr.io/api-gateway:v1.${{ github.run_number }}" \
+              --environment ${{ env.CONTAINERAPPS_ENVIRONMENT }} \
+              --registry-server ${{ env.AZURE_ACR }}.azurecr.io \
+              --registry-username ${{ secrets.REGISTRY_USERNAME }} \
+              --registry-password ${{ secrets.REGISTRY_PASSWORD }} \
+              --min-replicas 1 \
+              --max-replicas 1 \
+          else
+            echo "Container app exists, updating..."
+            
+            az containerapp update \
+                --name api-gateway \
+                --resource-group ${{ env.RESOURCE_GROUP }} \
+                --image "${{ env.AZURE_ACR }}.azurecr.io/api-gateway:v1.${{ github.run_number }}"
+          fi
