@@ -212,8 +212,8 @@ jobs:
               --image "${{ env.AZURE_ACR }}.azurecr.io/api-gateway:v1.${{ github.run_number }}" \
               --environment ${{ env.CONTAINERAPPS_ENVIRONMENT }} \
               --registry-server ${{ env.AZURE_ACR }}.azurecr.io \
-              --registry-username ${{ secrets.REGISTRY_USERNAME }} \
-              --registry-password ${{ secrets.REGISTRY_PASSWORD }} \
+              --registry-username ${{ secrets.ACR_USERNAME }} \
+              --registry-password ${{ secrets.ACR_PASSWORD }} \
               --min-replicas 1 \
               --max-replicas 1 \
           #else
