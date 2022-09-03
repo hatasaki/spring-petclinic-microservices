@@ -185,25 +185,25 @@ jobs:
         mvn clean package -DskipTests -Denv=cloud
 
     - name: Build api-gateway container image
-      run: docker build ${{ env.API_GATEWAY_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.API_GATEWAY }}:v1.${{ github.run_number }}"
+      run: docker build ${{ env.API_GATEWAY_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.API_GATEWAY }}:v1.${{ github.run_number }}" --build-arg PORT=8080 
 
     - name: Build admin-server container image
-      run: docker build ${{ env.ADMIN_SERVER_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.ADMIN_SERVER }}:v1.${{ github.run_number }}"
+      run: docker build ${{ env.ADMIN_SERVER_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.ADMIN_SERVER }}:v1.${{ github.run_number }}" --build-arg PORT=9090 
 
     - name: Build customer-service container image
-      run: docker build ${{ env.CUSTOMERS_SERVICE_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.CUSTOMERS_SERVICE }}:v1.${{ github.run_number }}"
+      run: docker build ${{ env.CUSTOMERS_SERVICE_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.CUSTOMERS_SERVICE }}:v1.${{ github.run_number }}" --build-arg PORT=8081 
 
     - name: Build vets-service container image
-      run: docker build ${{ env.VETS_SERVICE_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.VETS_SERVICE }}:v1.${{ github.run_number }}"
+      run: docker build ${{ env.VETS_SERVICE_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.VETS_SERVICE }}:v1.${{ github.run_number }}" --build-arg PORT=8082
 
     - name: Build visits-service container image
-      run: docker build ${{ env.VISITS_SERVICE_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.VISITS_SERVICE }}:v1.${{ github.run_number }}"
+      run: docker build ${{ env.VISITS_SERVICE_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.VISITS_SERVICE }}:v1.${{ github.run_number }}" --build-arg PORT=8083
 
     - name: Build discovery-server container image
-      run: docker build ${{ env.DISCOVERY_SERVER_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.DISCOVERY_SERVER }}:v1.${{ github.run_number }}"
+      run: docker build ${{ env.DISCOVERY_SERVER_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.DISCOVERY_SERVER }}:v1.${{ github.run_number }}" --build-arg PORT=8761
 
     - name: Build config-server container image
-      run: docker build ${{ env.CONFIG_SERVER_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.CONFIG_SERVER }}:v1.${{ github.run_number }}"
+      run: docker build ${{ env.CONFIG_SERVER_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.CONFIG_SERVER }}:v1.${{ github.run_number }}" --build-arg PORT=8888
 
     - name: Login to the Azure Container Registry  
       uses: azure/docker-login@v1
@@ -325,6 +325,7 @@ jobs:
             --min-replicas 1 \
             --max-replicas 1 \
             --enable-dapr \
+            --dapr-app-port 8081 \
             --dapr-app-id ${{ env.CUSTOMERS_SERVICE }} \
             --dapr-app-protocol http \
             --env-vars  MYSQL_SERVER_FULL_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
@@ -344,6 +345,7 @@ jobs:
             --min-replicas 1 \
             --max-replicas 1 \
             --enable-dapr \
+            --dapr-app-port 8082 \
             --dapr-app-id ${{ env.VETS_SERVICE }} \
             --dapr-app-protocol http \
             --env-vars  MYSQL_SERVER_FULL_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
@@ -363,6 +365,7 @@ jobs:
             --min-replicas 1 \
             --max-replicas 1 \
             --enable-dapr \
+            --dapr-app-port 8083 \
             --dapr-app-id ${{ env.VISITS_SERVICE }} \
             --dapr-app-protocol http \
             --env-vars  MYSQL_SERVER_FULL_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
