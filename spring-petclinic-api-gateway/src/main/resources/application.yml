@@ -6,19 +6,19 @@ spring:
     gateway:
       routes:
         - id: vets-service
-          uri: http://vets-service
+          uri: http://localhost:3500/v1.0/invoke/vets-service/method
           predicates:
             - Path=/api/vet/**
           filters:
             - StripPrefix=2
         - id: visits-service
-          uri: http://visits-service
+          uri: http://localhost:3500/v1.0/invoke/vvisits-service/mthod
           predicates:
             - Path=/api/visit/**
           filters:
             - StripPrefix=2
         - id: customers-service
-          uri: http://customers-service
+          uri: http://localhost:3500/v1.0/invoke/vcustomers-service/method
           predicates:
             - Path=/api/customer/**
           filters:
