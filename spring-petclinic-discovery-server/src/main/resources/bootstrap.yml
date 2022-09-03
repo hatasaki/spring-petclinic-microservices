@@ -11,4 +11,4 @@ spring:
       on-profile: docker
   cloud:
     config:
-      uri: http://localhost:3500/v1.0/invoke/config-server/method/ #http://config-server:8888
+      uri: http://config-server:8888
