@@ -183,7 +183,7 @@ jobs:
         mvn clean package -DskipTests -Denv=cloud
 
     - name: Build api-gateway container image
-      run: docker build ${{ env.API_GATEWAY_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/api-gateway:v1.${{ github.run_number }}"
+      run: docker build ${{ env.API_GATEWAY_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/api-gateway:v1.${{ github.run_number }}" --build-arg JAR_PATH=target/spring-petclinic-api-gateway-2.5.1.jar
 
     - name: Login to the Azure Container Registry  
       uses: azure/docker-login@v1
