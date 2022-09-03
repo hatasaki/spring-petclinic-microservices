@@ -293,7 +293,6 @@ jobs:
             --min-replicas 1 \
             --max-replicas 1 \
             --enable-dapr \
-            #--dapr-app-port 9090 \
             --dapr-app-id ${{ env.CUSTOMERS_SERVICE }} \
             --dapr-app-protocol http \
             --env-vars  MYSQL_SERVER_FULL_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
