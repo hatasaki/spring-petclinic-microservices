@@ -7,7 +7,7 @@ env:
   SPRING_CLOUD_SERVICE: asa-demo # customize this
   KEYVAULT: asa-hat-kv # customize this
   AZURE_ACR: acrasa
-  CONTAINERAPPS_ENVIRONMENT: aca-env
+  CONTAINERAPPS_ENVIRONMENT: asa-env
   # ==== APPS ====:
   API_GATEWAY: api-gateway
   ADMIN_SERVER: admin-server
