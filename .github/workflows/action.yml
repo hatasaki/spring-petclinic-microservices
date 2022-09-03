@@ -299,5 +299,5 @@ jobs:
             --env-vars  MYSQL_SERVER_FULL_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
                         MYSQL_DATABASE_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }} \
                         MYSQL_SERVER_ADMIN_LOGIN_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-LOGIN-NAME }} \
-                        MYSQL_SERVER_ADMIN_PASSWORD=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}"
+                        MYSQL_SERVER_ADMIN_PASSWORD=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}
 
