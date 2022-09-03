@@ -12,13 +12,13 @@ spring:
           filters:
             - StripPrefix=2
         - id: visits-service
-          uri: http://localhost:3500/v1.0/invoke/vvisits-service/mthod
+          uri: http://localhost:3500/v1.0/invoke/visits-service/mthod
           predicates:
             - Path=/api/visit/**
           filters:
             - StripPrefix=2
         - id: customers-service
-          uri: http://localhost:3500/v1.0/invoke/vcustomers-service/method
+          uri: http://localhost:3500/v1.0/invoke/customers-service/method
           predicates:
             - Path=/api/customer/**
           filters:
