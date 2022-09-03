@@ -259,7 +259,7 @@ jobs:
             --min-replicas 1 \
             --max-replicas 1 \
             --enable-dapr \
-            --dapr-app-port 3500 \
+            --dapr-app-port 8888 \
             --dapr-app-id ${{ env.CONFIG_SERVER }} \
             --dapr-app-protocol http
 
@@ -275,7 +275,7 @@ jobs:
             --min-replicas 1 \
             --max-replicas 1 \
             --enable-dapr \
-            --dapr-app-port 3500 \
+            --dapr-app-port 8761 \
             --dapr-app-id ${{ env.DISCOVERY_SERVER }} \
             --dapr-app-protocol http
 
@@ -291,7 +291,7 @@ jobs:
             --min-replicas 1 \
             --max-replicas 1 \
             --enable-dapr \
-            --dapr-app-port 3500 \
+            --dapr-app-port 8080 \
             --dapr-app-id ${{ env.API_GATEWAY }} \
             --dapr-app-protocol http \
             --ingress external \
@@ -309,7 +309,7 @@ jobs:
             --min-replicas 1 \
             --max-replicas 1 \
             --enable-dapr \
-            --dapr-app-port 3500 \
+            --dapr-app-port 9090 \
             --dapr-app-id ${{ env.ADMIN_SERVER }} \
             --dapr-app-protocol http
 
@@ -325,7 +325,6 @@ jobs:
             --min-replicas 1 \
             --max-replicas 1 \
             --enable-dapr \
-            --dapr-app-port 3500 \
             --dapr-app-id ${{ env.CUSTOMERS_SERVICE }} \
             --dapr-app-protocol http \
             --env-vars  MYSQL_SERVER_FULL_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
@@ -345,7 +344,6 @@ jobs:
             --min-replicas 1 \
             --max-replicas 1 \
             --enable-dapr \
-            --dapr-app-port 3500 \
             --dapr-app-id ${{ env.VETS_SERVICE }} \
             --dapr-app-protocol http \
             --env-vars  MYSQL_SERVER_FULL_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
@@ -365,7 +363,6 @@ jobs:
             --min-replicas 1 \
             --max-replicas 1 \
             --enable-dapr \
-            --dapr-app-port 3500 \
             --dapr-app-id ${{ env.VISITS_SERVICE }} \
             --dapr-app-protocol http \
             --env-vars  MYSQL_SERVER_FULL_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
