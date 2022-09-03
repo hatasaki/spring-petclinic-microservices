@@ -33,7 +33,7 @@ import static java.util.stream.Collectors.joining;
 public class VisitsServiceClient {
 
     // Could be changed for testing purpose
-    private String hostname = "https://asa-demo-vets-service.azuremicroservices.io/";
+    private String hostname = "https://vets-service/";
 
     private final WebClient.Builder webClientBuilder;
 
