@@ -295,22 +295,6 @@ jobs:
             --enable-dapr \
             #--dapr-app-port 9090 \
             --dapr-app-id ${{ env.CUSTOMERS_SERVICE }} \
-            --dapr-app-protocol http
-
-          echo Deploy customers-service
-          az containerapp create \
-            --name ${{ env.CUSTOMERS_SERVICE }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --image "${{ env.AZURE_ACR }}.azurecr.io/${{ env.CUSTOMERS_SERVICE }}:v1.${{ github.run_number }}" \
-            --environment ${{ env.CONTAINERAPP_ENVIRONMENT }} \
-            --registry-server ${{ env.AZURE_ACR }}.azurecr.io \
-            --registry-username ${{ secrets.ACR_USERNAME }} \
-            --registry-password ${{ secrets.ACR_PASSWORD }} \
-            --min-replicas 1 \
-            --max-replicas 1 \
-            --enable-dapr \
-            #--dapr-app-port 9090 \
-            --dapr-app-id ${{ env.CUSTOMERS_SERVICE }} \
             --dapr-app-protocol http \
             --env-vars  MYSQL_SERVER_FULL_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
                         MYSQL_DATABASE_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }} \
