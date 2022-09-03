@@ -230,7 +230,7 @@ jobs:
 
     - name: Push the visits-service container image to ACR
       run: |
-        docker push "${{ env.AZURE_ACR }}.azurecr.io/${{ env.VISITS_SERVICE_PATH }}:v1.${{ github.run_number }}"
+        docker push "${{ env.AZURE_ACR }}.azurecr.io/${{ env.VISITS_SERVICE }}:v1.${{ github.run_number }}"
 
     - name: Push the discovery-server container image to ACR
       run: |
