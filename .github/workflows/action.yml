@@ -216,6 +216,7 @@ jobs:
               --registry-password ${{ secrets.ACR_PASSWORD }} \
               --min-replicas 1 \
               --max-replicas 1 \
+              --ingress external --target-port 8080
           #else
           #  echo "Container app exists, updating..."
             
