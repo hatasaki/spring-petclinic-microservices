@@ -201,27 +201,15 @@ jobs:
       with:
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
-          #az containerapp show -n api-gateway -g ${{ env.RESOURCE_GROUP }} -o table
-          
-          #if [[ $? != 0 ]]; then
-            echo "Container app not found, creating a new one..."
-            
-            az containerapp create \
-              --name api-gateway \
-              --resource-group ${{ env.RESOURCE_GROUP }} \
-              --image "${{ env.AZURE_ACR }}.azurecr.io/api-gateway:v1.${{ github.run_number }}" \
-              --environment ${{ env.CONTAINERAPPS_ENVIRONMENT }} \
-              --registry-server ${{ env.AZURE_ACR }}.azurecr.io \
-              --registry-username ${{ secrets.ACR_USERNAME }} \
-              --registry-password ${{ secrets.ACR_PASSWORD }} \
-              --min-replicas 1 \
-              --max-replicas 1 \
-              --ingress external --target-port 8080
-          #else
-          #  echo "Container app exists, updating..."
-            
-          #  az containerapp update \
-          #      --name api-gateway \
-          #      --resource-group ${{ env.RESOURCE_GROUP }} \
-          #      --image "${{ env.AZURE_ACR }}.azurecr.io/api-gateway:v1.${{ github.run_number }}"
-          #fi
+
+          az containerapp create \
+            --name api-gateway \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --image "${{ env.AZURE_ACR }}.azurecr.io/api-gateway:v1.${{ github.run_number }}" \
+            --environment ${{ env.CONTAINERAPPS_ENVIRONMENT }} \
+            --registry-server ${{ env.AZURE_ACR }}.azurecr.io \
+            --registry-username ${{ secrets.ACR_USERNAME }} \
+            --registry-password ${{ secrets.ACR_PASSWORD }} \
+            --min-replicas 1 \
+            --max-replicas 1 \
+            #--ingress external --target-port 8080
