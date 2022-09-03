@@ -241,16 +241,17 @@ jobs:
         docker push "${{ env.AZURE_ACR }}.azurecr.io/${{ env.CONFIG_SERVER }}:v1.${{ github.run_number }}"
 
 
-    - name: Deploy api-gateway to Container App
+    - name: Deploy apps to Container App
       uses: Azure/cli@v1
       with:
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
 
+          echo Deploy app-gateway
           az containerapp create \
-            --name api-gateway \
+            --name ${{ env.API_GATEWAY }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
-            --image "${{ env.AZURE_ACR }}.azurecr.io/api-gateway:v1.${{ github.run_number }}" \
+            --image "${{ env.AZURE_ACR }}.azurecr.io/${{ env.API_GATEWAY }}:v1.${{ github.run_number }}" \
             --environment ${{ env.CONTAINERAPP_ENVIRONMENT }} \
             --registry-server ${{ env.AZURE_ACR }}.azurecr.io \
             --registry-username ${{ secrets.ACR_USERNAME }} \
@@ -259,8 +260,60 @@ jobs:
             --max-replicas 1 \
             --enable-dapr \
             --dapr-app-port 8080 \
-            --dapr-app-id rating-api \
+            --dapr-app-id ${{ env.API_GATEWAY }} \
             --dapr-app-protocol http \
             --ingress external \
             --target-port 8080
+
+          echo Deploy admin-server
+          az containerapp create \
+            --name ${{ env.ADMIN_SERVER }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --image "${{ env.AZURE_ACR }}.azurecr.io/${{ env.ADMIN_SERVER }}:v1.${{ github.run_number }}" \
+            --environment ${{ env.CONTAINERAPP_ENVIRONMENT }} \
+            --registry-server ${{ env.AZURE_ACR }}.azurecr.io \
+            --registry-username ${{ secrets.ACR_USERNAME }} \
+            --registry-password ${{ secrets.ACR_PASSWORD }} \
+            --min-replicas 1 \
+            --max-replicas 1 \
+            --enable-dapr \
+            --dapr-app-port 9090 \
+            --dapr-app-id ${{ env.ADMIN_SERVER }} \
+            --dapr-app-protocol http
+
+          echo Deploy customers-service
+          az containerapp create \
+            --name ${{ env.CUSTOMERS_SERVICE }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --image "${{ env.AZURE_ACR }}.azurecr.io/${{ env.CUSTOMERS_SERVICE }}:v1.${{ github.run_number }}" \
+            --environment ${{ env.CONTAINERAPP_ENVIRONMENT }} \
+            --registry-server ${{ env.AZURE_ACR }}.azurecr.io \
+            --registry-username ${{ secrets.ACR_USERNAME }} \
+            --registry-password ${{ secrets.ACR_PASSWORD }} \
+            --min-replicas 1 \
+            --max-replicas 1 \
+            --enable-dapr \
+            #--dapr-app-port 9090 \
+            --dapr-app-id ${{ env.CUSTOMERS_SERVICE }} \
+            --dapr-app-protocol http
+
+          echo Deploy customers-service
+          az containerapp create \
+            --name ${{ env.CUSTOMERS_SERVICE }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --image "${{ env.AZURE_ACR }}.azurecr.io/${{ env.CUSTOMERS_SERVICE }}:v1.${{ github.run_number }}" \
+            --environment ${{ env.CONTAINERAPP_ENVIRONMENT }} \
+            --registry-server ${{ env.AZURE_ACR }}.azurecr.io \
+            --registry-username ${{ secrets.ACR_USERNAME }} \
+            --registry-password ${{ secrets.ACR_PASSWORD }} \
+            --min-replicas 1 \
+            --max-replicas 1 \
+            --enable-dapr \
+            #--dapr-app-port 9090 \
+            --dapr-app-id ${{ env.CUSTOMERS_SERVICE }} \
+            --dapr-app-protocol http \
+            --env-vars  MYSQL_SERVER_FULL_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
+                        MYSQL_DATABASE_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }} \
+                        MYSQL_SERVER_ADMIN_LOGIN_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-LOGIN-NAME }} \
+                        MYSQL_SERVER_ADMIN_PASSWORD=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}"
 
