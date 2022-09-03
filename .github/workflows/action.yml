@@ -14,6 +14,8 @@ env:
   CUSTOMERS_SERVICE: customers-service
   VETS_SERVICE: vets-service
   VISITS_SERVICE: visits-service
+  CONFIG_SERVER: config-server
+  DISCOVERY_SERVER: discovery-server
   # ==== JARS ====:
   API_GATEWAY_JAR: spring-petclinic-api-gateway/target/spring-petclinic-api-gateway-2.5.1.jar
   ADMIN_SERVER_JAR: spring-petclinic-admin-server/target/spring-petclinic-admin-server-2.5.1.jar
