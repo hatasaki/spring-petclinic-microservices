@@ -33,7 +33,7 @@ public class CustomersServiceClient {
 
     public Mono<OwnerDetails> getOwner(final int ownerId) {
         return webClientBuilder.build().get()
-            .uri("http://asa-demo-customers-service.azuremicroservices.io/owners/{ownerId}", ownerId) /* .uri("http://customers-service/owners/{ownerId}", ownerId) */
+            .uri("http://customers-service/owners/{ownerId}", ownerId) */
             .retrieve()
             .bodyToMono(OwnerDetails.class);
     }
