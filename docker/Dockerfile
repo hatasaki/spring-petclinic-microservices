@@ -1,4 +1,4 @@
-FROM adoptopenjdk:11-jre-hotspot
+FROM adoptopenjdk:8-jre-hotspot
 ENV SPRING_PROFILES_ACTIVE docker
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
