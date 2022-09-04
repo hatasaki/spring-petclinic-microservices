@@ -6,20 +6,40 @@ spring:
     gateway:
       routes:
         - id: vets-service
-          uri: http://localhost:3500/v1.0/invoke/vets-service/method
+          uri: http://vets-service
           predicates:
             - Path=/api/vet/**
           filters:
             - StripPrefix=2
         - id: visits-service
-          uri: http://localhost:3500/v1.0/invoke/visits-service/mthod
+          uri: http://visits-service
           predicates:
             - Path=/api/visit/**
           filters:
             - StripPrefix=2
         - id: customers-service
-          uri: http://localhost:3500/v1.0/invoke/customers-service/method
+          uri: http://customers-service
           predicates:
             - Path=/api/customer/**
           filters:
             - StripPrefix=2
+
+# from https://github.com/Azure-Samples/spring-petclinic-microservices-config/blob/master/api-gateway.yml
+zuul:
+  prefix: /api
+  ignoredServices: '*'
+  routes:
+    vets-service: /vet/**
+    visits-service: /visit/**
+    customers-service: /customer/**
+    api-gateway: /gateway/**
+
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,text/css,application/javascript
+    min-response-size: 2048
+
+# Internationalization
+spring.messages.basename: messages/messages
