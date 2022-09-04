@@ -6,11 +6,15 @@ spring:
     name: api-gateway
 ---
 spring:
-  activate:
+  config:
+    activate:
       on-profile: docker
   cloud:
     config:
       enabled: false
+---
+spring:
+  profiles: docker
 eureka:
   client:
     enabled: false
