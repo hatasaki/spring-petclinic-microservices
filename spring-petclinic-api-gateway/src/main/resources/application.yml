@@ -23,8 +23,11 @@ spring:
             - Path=/api/customer/**
           filters:
             - StripPrefix=2
-
-# from https://github.com/Azure-Samples/spring-petclinic-microservices-config/blob/master/api-gateway.yml
+---
+spring:
+  activate:
+      on-profile: docker
+#from https://github.com/Azure-Samples/spring-petclinic-microservices-config/blob/master/api-gateway.yml
 zuul:
   prefix: /api
   ignoredServices: '*'
@@ -33,13 +36,11 @@ zuul:
     visits-service: /visit/**
     customers-service: /customer/**
     api-gateway: /gateway/**
-
 server:
   port: 8080
   compression:
     enabled: true
     mime-types: application/json,text/css,application/javascript
     min-response-size: 2048
-
 # Internationalization
 spring.messages.basename: messages/messages
