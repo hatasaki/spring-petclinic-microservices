@@ -25,7 +25,8 @@ spring:
             - StripPrefix=2
 ---
 spring:
-  activate:
+  config:
+    activate:
       on-profile: docker
 #from https://github.com/Azure-Samples/spring-petclinic-microservices-config/blob/master/api-gateway.yml
 zuul:

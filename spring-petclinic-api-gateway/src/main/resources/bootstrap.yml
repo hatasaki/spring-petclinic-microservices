@@ -9,12 +9,8 @@ spring:
   config:
     activate:
       on-profile: docker
-  cloud:
-    config:
-      enabled: false
+  cloud.config.enabled: false
 ---
 spring:
   profiles: docker
-eureka:
-  client:
-    enabled: false
+eureka.client.enabled: false

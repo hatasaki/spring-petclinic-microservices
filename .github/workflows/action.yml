@@ -190,24 +190,6 @@ jobs:
     - name: Build api-gateway container image
       run: docker build ${{ env.API_GATEWAY_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.API_GATEWAY }}:v1.${{ github.run_number }}" --build-arg PORT=8080 
 
-    - name: Build admin-server container image
-      run: docker build ${{ env.ADMIN_SERVER_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.ADMIN_SERVER }}:v1.${{ github.run_number }}" --build-arg PORT=9090 
-
-    - name: Build customer-service container image
-      run: docker build ${{ env.CUSTOMERS_SERVICE_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.CUSTOMERS_SERVICE }}:v1.${{ github.run_number }}" --build-arg PORT=8081 
-
-    - name: Build vets-service container image
-      run: docker build ${{ env.VETS_SERVICE_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.VETS_SERVICE }}:v1.${{ github.run_number }}" --build-arg PORT=8082
-
-    - name: Build visits-service container image
-      run: docker build ${{ env.VISITS_SERVICE_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.VISITS_SERVICE }}:v1.${{ github.run_number }}" --build-arg PORT=8083
-
-    - name: Build discovery-server container image
-      run: docker build ${{ env.DISCOVERY_SERVER_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.DISCOVERY_SERVER }}:v1.${{ github.run_number }}" --build-arg PORT=8761
-
-    - name: Build config-server container image
-      run: docker build ${{ env.CONFIG_SERVER_PATH }}/. --file docker/Dockerfile --tag "${{ env.AZURE_ACR }}.azurecr.io/${{ env.CONFIG_SERVER }}:v1.${{ github.run_number }}" --build-arg PORT=8888
-
     - name: Login to the Azure Container Registry  
       uses: azure/docker-login@v1
       with:
@@ -219,36 +201,28 @@ jobs:
       run: |
         docker push "${{ env.AZURE_ACR }}.azurecr.io/${{ env.API_GATEWAY }}:v1.${{ github.run_number }}"
 
-    - name: Push the admin-server container image to ACR
-      run: |
-        docker push "${{ env.AZURE_ACR }}.azurecr.io/${{ env.ADMIN_SERVER }}:v1.${{ github.run_number }}"
-
-    - name: Push the customer-service container image to ACR
-      run: |
-        docker push "${{ env.AZURE_ACR }}.azurecr.io/${{ env.CUSTOMERS_SERVICE }}:v1.${{ github.run_number }}"
-
-    - name: Push the vets-service container image to ACR
-      run: |
-        docker push "${{ env.AZURE_ACR }}.azurecr.io/${{ env.VETS_SERVICE }}:v1.${{ github.run_number }}"
-
-    - name: Push the visits-service container image to ACR
-      run: |
-        docker push "${{ env.AZURE_ACR }}.azurecr.io/${{ env.VISITS_SERVICE }}:v1.${{ github.run_number }}"
-
-    - name: Push the discovery-server container image to ACR
-      run: |
-        docker push "${{ env.AZURE_ACR }}.azurecr.io/${{ env.DISCOVERY_SERVER }}:v1.${{ github.run_number }}"
-
-    - name: Push the config-server container image to ACR
-      run: |
-        docker push "${{ env.AZURE_ACR }}.azurecr.io/${{ env.CONFIG_SERVER }}:v1.${{ github.run_number }}"
-
-
     - name: Deploy apps to Container App
       uses: Azure/cli@v1
       with:
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
+
+          echo Assign endpoint to vets-service, visits-service, and customers-service run on SpringApps
+          az spring app update \
+            --name  ${{ env.VETS_SERVICE }} \
+            --service ${{ env.SPRING_CLOUD_SERVICE }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --assign-endpoint true
+          az spring app update \
+            --name  ${{ env.VISITS_SERVICE }} \
+            --service ${{ env.SPRING_CLOUD_SERVICE }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --assign-endpoint true
+          az spring app update \
+            --name  ${{ env.CUSTOMERS_SERVICE }} \
+            --service ${{ env.SPRING_CLOUD_SERVICE }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --assign-endpoint true
 
           echo Deploy app-gateway
           az containerapp create \
