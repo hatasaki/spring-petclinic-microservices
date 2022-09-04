@@ -82,6 +82,9 @@ jobs:
         use-staging-deployment: false
         package: ${{ github.workspace }}/${{ env.API_GATEWAY_JAR }}
         jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql
+        environment-variables: "-VETS_SERVICE_URL vets-service \
+        -VISITS_SERVICE_URL visits-service \
+        -CUSTOMERS_SERVICE_URL customers-service"
     
     - name: Deploy admin-server
       uses:  Azure/spring-cloud-deploy@v1
@@ -257,4 +260,7 @@ jobs:
             --registry-username ${{ secrets.ACR_USERNAME }} \
             --registry-password ${{ secrets.ACR_PASSWORD }} \
             --min-replicas 1 \
-            --max-replicas 1 
+            --max-replicas 1 \
+            --env-vars VETS_SERVICE_URL=https://${{ env.SPRING_CLOUD_SERVICE }}-${{ env.VETS_SERVICE }}.azuremicroservices.io \
+                       VISITS_SERVICE_URL=https://${{ env.SPRING_CLOUD_SERVICE }}-${{ env.VISITS_SERVICE }}.azuremicroservices.io \
+                       CUSTOMERS_SERVICE_URL=https://${{ env.SPRING_CLOUD_SERVICE }}-${{ env.CUSTOMERS_SERVICE }}.azuremicroservices.io
