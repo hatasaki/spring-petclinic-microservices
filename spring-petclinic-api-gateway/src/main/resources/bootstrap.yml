@@ -4,13 +4,10 @@ spring:
       uri: http://localhost:8888
   application:
     name: api-gateway
-#---
-#spring:
-#  config:
-#    activate:
-#      on-profile: docker
-  #cloud.config.enabled: false
-#---
-#spring:
-#  profiles: docker
-#eureka.client.enabled: false
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  cloud.config.enabled: false
+eureka.client.enabled: false

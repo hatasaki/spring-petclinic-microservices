@@ -23,11 +23,11 @@ spring:
             - Path=/api/customer/**
           filters:
             - StripPrefix=2
-#---
-#spring:
-#  config:
-#    activate:
-#      on-profile: docker
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
 #from https://github.com/Azure-Samples/spring-petclinic-microservices-config/blob/master/api-gateway.yml
 zuul:
   prefix: /api
