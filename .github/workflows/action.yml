@@ -148,6 +148,8 @@ jobs:
   Deploy-to-ContainerApps:
 
     runs-on: ubuntu-latest
+    needs: deploy-to-SpringApps
+    
     steps:
     - name: Login with Key Vault SP
       uses: azure/login@v1
