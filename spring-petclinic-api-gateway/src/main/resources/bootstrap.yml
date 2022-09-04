@@ -6,8 +6,11 @@ spring:
     name: api-gateway
 ---
 spring:
-  profiles: docker
-  cloud.config.enabled: false
-  application:
-    name: api-gateway
-eureka.client.enabled: false
+  activate:
+      on-profile: docker
+  cloud:
+    config:
+      enabled: false
+eureka:
+  client:
+    enabled: false
