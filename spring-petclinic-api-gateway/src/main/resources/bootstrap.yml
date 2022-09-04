@@ -6,7 +6,7 @@ spring:
     name: api-gateway
 ---
 spring:
-  profile: docker
+  profiles: docker
   cloud.config.enabled: false
   application:
     name: api-gateway
