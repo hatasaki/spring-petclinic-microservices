@@ -230,4 +230,5 @@ jobs:
             --name ${{ env.API_GATEWAY }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --ingress external \
-            --target-port 80
+            --target-port 80 \
+            --type external
