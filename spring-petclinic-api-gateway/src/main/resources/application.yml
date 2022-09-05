@@ -6,19 +6,19 @@ spring:
     gateway:
       routes:
         - id: vets-service
-          uri: https://asa-demo-vets-service.azuremicroservices.io #${VETS_SERVICE_URL}
+          uri: ${VETS_SERVICE_URL}
           predicates:
             - Path=/api/vet/**
           filters:
             - StripPrefix=2
         - id: visits-service
-          uri: https://asa-demo-visits-service.azuremicroservices.io #${VISITS_SERVICE_URL}
+          uri: ${VISITS_SERVICE_URL}
           predicates:
             - Path=/api/visit/**
           filters:
             - StripPrefix=2
         - id: customers-service
-          uri: https://asa-demo-customers-service.azuremicroservices.io #${CUSTOMERS_SERVICE_URL}
+          uri: ${CUSTOMERS_SERVICE_URL}
           predicates:
             - Path=/api/customer/**
           filters:

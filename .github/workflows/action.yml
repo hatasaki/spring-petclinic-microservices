@@ -82,9 +82,9 @@ jobs:
         use-staging-deployment: false
         package: ${{ github.workspace }}/${{ env.API_GATEWAY_JAR }}
         jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql
-        environment-variables: "-VETS_SERVICE_URL vets-service \
-        -VISITS_SERVICE_URL visits-service \
-        -CUSTOMERS_SERVICE_URL customers-service"
+        environment-variables: "-VETS_SERVICE_URL http://vets-service \
+        -VISITS_SERVICE_URL http://visits-service \
+        -CUSTOMERS_SERVICE_URL http://customers-service"
     
     - name: Deploy admin-server
       uses:  Azure/spring-cloud-deploy@v1
@@ -208,23 +208,6 @@ jobs:
       with:
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
-
-          echo Assign endpoint to vets-service, visits-service, and customers-service run on SpringApps
-          az spring app update \
-            --name  ${{ env.VETS_SERVICE }} \
-            --service ${{ env.SPRING_CLOUD_SERVICE }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --assign-endpoint true
-          az spring app update \
-            --name  ${{ env.VISITS_SERVICE }} \
-            --service ${{ env.SPRING_CLOUD_SERVICE }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --assign-endpoint true
-          az spring app update \
-            --name  ${{ env.CUSTOMERS_SERVICE }} \
-            --service ${{ env.SPRING_CLOUD_SERVICE }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --assign-endpoint true
 
           echo Deploy app-gateway
           az containerapp create \
