@@ -225,9 +225,4 @@ jobs:
             --env-vars VETS_SERVICE_URL=https://${{ env.SPRING_CLOUD_SERVICE }}-${{ env.VETS_SERVICE }}.azuremicroservices.io \
                        VISITS_SERVICE_URL=https://${{ env.SPRING_CLOUD_SERVICE }}-${{ env.VISITS_SERVICE }}.azuremicroservices.io \
                        CUSTOMERS_SERVICE_URL=https://${{ env.SPRING_CLOUD_SERVICE }}-${{ env.CUSTOMERS_SERVICE }}.azuremicroservices.io
-
-          az containerapp ingress enable \
-            --name ${{ env.API_GATEWAY }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --target-port 80 \
-            --type external
+                       
