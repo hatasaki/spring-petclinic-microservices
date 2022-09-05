@@ -229,6 +229,5 @@ jobs:
           az containerapp ingress enable \
             --name ${{ env.API_GATEWAY }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
-            --ingress external \
             --target-port 80 \
             --type external
