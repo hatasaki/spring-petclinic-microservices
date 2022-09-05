@@ -222,8 +222,12 @@ jobs:
             --max-replicas 1 \
             --cpu 1 \
             --memory 2.0Gi \
-            --ingress external \
-            --target-port 80 \
             --env-vars VETS_SERVICE_URL=https://${{ env.SPRING_CLOUD_SERVICE }}-${{ env.VETS_SERVICE }}.azuremicroservices.io \
                        VISITS_SERVICE_URL=https://${{ env.SPRING_CLOUD_SERVICE }}-${{ env.VISITS_SERVICE }}.azuremicroservices.io \
                        CUSTOMERS_SERVICE_URL=https://${{ env.SPRING_CLOUD_SERVICE }}-${{ env.CUSTOMERS_SERVICE }}.azuremicroservices.io
+
+          az containerapp ingress enable \
+            --name ${{ env.API_GATEWAY }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --ingress external \
+            --target-port 80
